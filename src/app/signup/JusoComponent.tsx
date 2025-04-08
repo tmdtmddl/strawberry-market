@@ -1,23 +1,24 @@
-import axios from "axios";
+import axios from "axios"; //HTTP 요청 보낼 때 사용.
 import { useCallback, useMemo, useState, useTransition } from "react";
 import { Loading, SubmitButton, TextInput } from "../components/ui";
 import { AiOutlineSearch } from "react-icons/ai";
 import { twMerge } from "tailwind-merge";
 
 interface JusoComponentProps {
-  onChangeAddress: (address: Juso) => void;
-  addresses: Juso[];
+  onChangeAddress: (address: Juso) => void; //주소를 선택했을 때 실행할 함수.
+  addresses: Juso[]; //현재 선택된 주소 리스트.
 }
 
 const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
   const [keyword, setKeyword] = useState("");
   const [isShowing, setIsShowing] = useState(false);
-  const [items, setItems] = useState<Juso[]>([]);
+  const [items, setItems] = useState<Juso[]>([]); //검색된 주소 리스트 저장.
+  // 현재 선택된 주소 정보를 저장. 초기값은 가짜값 하나 넣어놓음.
   const [juso, setJuso] = useState<null | Juso>({
     id: "123123",
-    roadAddr: "대전광역시 중구 중앙로 ",
-    zipNo: "121",
-    rest: "501호",
+    roadAddr: " ",
+    zipNo: "",
+    rest: "",
   });
   const [isPending, startTransition] = useTransition();
 
@@ -33,14 +34,16 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
       return alert(message);
     }
     startTransition(async () => {
-      setIsShowing(false);
-      setJuso(null);
+      setIsShowing(false); // 리스트 감추고
+      setJuso(null); // 선택 주소 초기화
       try {
+        // 검색어를 가지고 서버에 요청 보내기 (POST 방식).
         const { data } = await axios.post(`api/v0/juso`, {
           keyword: keyword,
           currentPage: 1,
           countPerPage: 20,
         });
+        //받은 데이터를 리스트에 넣고 보여주기 상태로 전환.
         setItems(data.map((item: any) => ({ ...item, id: item.bdMgtSn })));
         setIsShowing(true);
       } catch (error: any) {
@@ -65,19 +68,24 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
           <SubmitButton
             type="button"
             onClick={onSubmit}
+            //클릭하면 검색 함수 실행.
             className="px-2.5 size-12 flex justify-center"
           >
             <AiOutlineSearch className="text-2xl" />
           </SubmitButton>
         </div>
+        {/* 메세지가있으면 메시지 보여줌. */}
         {message && <label className="text-red-500 text-sm">{message}</label>}
       </div>
       {isShowing && (
         <ul className="mt-2.5 flex flex-col gap-y-1.5">
+          {/* 검색된 주소 리스트를 보여줌. */}
           {items.map((juso) => {
+            // 이미 선택된 주소인지 체크.
             const select = addresses.find((address) => address.id === juso.id);
             return (
               <li key={juso.id}>
+                {/* 버튼을 누르면 주소 선택 상태로 저장하고 리스트 닫음. */}
                 <button
                   type="button"
                   className={twMerge(
@@ -112,7 +120,7 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
           </div>
           <div className="flex gap-x-2.5 items-end">
             <TextInput
-              value={juso.rest}
+              value={juso.rest || ""}
               onChange={(e) =>
                 setJuso((prev) => prev && { ...prev, rest: e.target.value })
               }
@@ -120,6 +128,7 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
               placeholder="501호"
               label="상세주소"
             />
+            {/* 주소 정보를 부모 컴포넌트로 전달하고 선택 초기화. */}
             <SubmitButton
               type="button"
               className="px-2.5 flex-1 text-shadow-md"

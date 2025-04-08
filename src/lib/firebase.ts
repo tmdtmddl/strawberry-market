@@ -1,9 +1,9 @@
 import firebase from "firebase/compat/app";
-import "firebase/compat/firestore";
 import "firebase/compat/auth";
+import "firebase/compat/firestore";
 import "firebase/compat/storage";
 
-const config = {
+const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
@@ -14,19 +14,13 @@ const config = {
 };
 
 if (!firebase.apps.length) {
-  firebase.initializeApp(config);
+  firebase.initializeApp(firebaseConfig);
 }
 
-const firestore = firebase.firestore;
+const auth = firebase.auth();
+const authService = auth;
+const firestore = firebase.firestore();
+const dbService = firestore;
+const storage = firebase.storage();
 
-const dbService = firestore();
-
-const fireauth = firebase.auth;
-
-const authService = fireauth();
-
-const firestorage = firebase.storage;
-
-const storage = firestorage();
-
-export { firestore, dbService, fireauth, authService, firestorage, storage };
+export { auth, authService, firestore, dbService, storage };

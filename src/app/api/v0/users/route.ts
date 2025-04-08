@@ -27,7 +27,7 @@ export async function POST(req: Request) {
 
       const user: User = { ...newUser, uid, createdAt: new Date() }; //! password
       //@ts-ignore
-      delete user.password;
+      delete user.password; // 비밀번호는 저장X
       await userRef.set(user);
       return reponse.success(user);
     } else {

@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
 
-//
+// React.ComponentProps<"input">=> input 태그에 쓰는 props 타입을 자동으로 가져옴.
+//타입에 명시한 전체 속성들 중, 직접 꺼낸 애들을 제외한 나머지를 props가 다 가져간다
 export const TextInput = ({
   label,
   labelClassName,
@@ -18,7 +19,7 @@ export const TextInput = ({
       {label && (
         <label
           htmlFor={props?.id ?? props?.name}
-          className={twMerge("text-sm text-gray-500", labelClassName)}
+          className={twMerge("text-xs text-gray-500", labelClassName)}
         >
           {label}
         </label>
@@ -35,7 +36,7 @@ export const TextInput = ({
       {message && (
         <label
           htmlFor={props?.id ?? props?.name}
-          className={twMerge("text-red", labelClassName)}
+          className={twMerge("text-red-500 text-xs", labelClassName)}
         >
           {message}
         </label>
@@ -50,6 +51,8 @@ export const Form = (props: React.ComponentProps<"form">) => (
     {...props}
     onSubmit={(e) => {
       e.preventDefault();
+
+      //props로 받은 onSubmit 함수가 있으면 실행.
       if (props.onSubmit) {
         props.onSubmit(e);
       }
@@ -58,6 +61,7 @@ export const Form = (props: React.ComponentProps<"form">) => (
   />
 );
 
+//React.ComponentProps<"button">: 기본 버튼 속성들 자동 포함.
 export const SubmitButton = ({
   buttonClassName,
   ...props
@@ -65,7 +69,7 @@ export const SubmitButton = ({
   <button
     {...props}
     className={twMerge(
-      " bg-pink-500 text-white p-2.5 rounded h-12 ",
+      " rounded p-2.5 bg-pink-300 text-white h-12",
       buttonClassName
     )}
   />
