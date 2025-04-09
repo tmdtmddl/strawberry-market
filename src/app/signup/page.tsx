@@ -11,14 +11,7 @@ import axios from "axios";
 import JusoComponent from "./JusoComponent";
 
 const initalState: DBUser = {
-  addresses: [
-    {
-      id: "123123",
-      roadAddr: "대전광역시 중구 중앙로",
-      rest: "501호",
-      zipNo: "121",
-    },
-  ],
+  addresses: [],
   createdAt: new Date(),
   sellerId: null,
   password: "123123",
@@ -31,7 +24,10 @@ const initalState: DBUser = {
 const Signup = () => {
   const [props, setProps] = useState(initalState);
   const [isPending, startTransition] = useTransition();
-  const [address, setAddress] = useState(initalState.addresses[0]);
+
+  const [isSearching, setIsSearching] = useState(
+    props.addresses.length === 0 ? true : false
+  );
 
   const onChangeP = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -74,6 +70,8 @@ const Signup = () => {
         const { data } = await axios.post("/api/v0/users", props);
         console.log(data as User);
       } catch (error: any) {
+        console.log(error);
+        const message = error.response.data;
         alert(error.response.data);
       }
     });
@@ -113,23 +111,50 @@ const Signup = () => {
         onChange={onChangeP}
         message={mobileMessage}
       />
-      {props.addresses.length > 0 ? (
-        <>
-          <JusoComponent
-            onChangeAddress={(newAddress) =>
-              setProps((prev) => ({ ...prev, addresses: [newAddress] }))
+
+      {isSearching && (
+        <JusoComponent
+          onChangeAddress={(newAddress) => {
+            const found = props.addresses.find(
+              (item) => item.id === newAddress.id
+            );
+
+            if (!found) {
+              setProps((prev) => ({ ...prev, addresses: [newAddress] }));
+              setIsSearching(false);
             }
-            addresses={props.addresses}
-          />
-          <SubmitButton>회원가입</SubmitButton>
-        </>
-      ) : (
-        <TextInput
-          label="기본배송지"
-          name="add"
-          value={`${props.addresses[0].roadAddr},${props.addresses[0].rest}`}
+          }}
+          addresses={props.addresses}
         />
       )}
+      {props.addresses.map((addr) => (
+        <div
+          key={addr.id}
+          className="border border-gray-200 p-2.5 rounded flex"
+        >
+          <div className="flex-1">
+            <p className="line-clamp-1">{addr.roadAddr}</p>
+            <p>
+              {addr.zipNo},{addr.rest}
+            </p>
+          </div>
+          <button
+            className="cursor-pointer text-red-500"
+            onClick={() => {
+              if (props.addresses.length === 1) {
+                setIsSearching(true);
+              }
+              setProps((prev) => ({
+                ...prev,
+                addresses: prev.addresses.filter((item) => item.id !== addr.id),
+              }));
+            }}
+          >
+            삭제
+          </button>
+        </div>
+      ))}
+      <SubmitButton>회원가입</SubmitButton>
     </Form>
   );
 };

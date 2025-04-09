@@ -1,6 +1,6 @@
 //! GET => 회원전체
 
-import { authService, dbService, reponse } from "@/lib";
+import { authService, dbService, response } from "@/lib";
 
 //! POST => 회원 추가
 
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const snap = await ref.where("email", "==", email).get();
     const foundUser = snap.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
     if (foundUser.length > 0) {
-      return reponse.error("이미 존재하는  회원입니다.");
+      return response.error("이미 존재하는  회원입니다.");
     }
     const res = await authService.createUserWithEmailAndPassword(
       email,
@@ -29,11 +29,11 @@ export async function POST(req: Request) {
       //@ts-ignore
       delete user.password; // 비밀번호는 저장X
       await userRef.set(user);
-      return reponse.success(user);
+      return response.success(user);
     } else {
-      return reponse.error("회원가입에 실패했습니다.");
+      return response.error("회원가입에 실패했습니다.");
     }
   } catch (error: any) {
-    return reponse.error(error.message);
+    return response.error(error.message);
   }
 }

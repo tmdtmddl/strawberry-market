@@ -1,5 +1,5 @@
-import { reponse } from "@/lib";
-//reponse → 성공/실패 응답을 깔끔하게 정리하는 커스텀 함수
+import { response } from "@/lib";
+//response → 성공/실패 응답을 깔끔하게 정리하는 커스텀 함수
 import axios from "axios";
 // POST 함수는 클라이언트가 이 API에 POST 요청을 보냈을 때 실행되는 함수
 export async function POST(req: Request) {
@@ -9,10 +9,10 @@ export async function POST(req: Request) {
 
   //유효성 검사
   if (!keyword) {
-    return reponse.error("검색어를 입력해주세요.");
+    return response.error("검색어를 입력해주세요.");
   }
   if (!currentPage || !countPerPage) {
-    return reponse.error("파라미터값을 확인해주세요.");
+    return response.error("파라미터값을 확인해주세요.");
   }
   // JUSO API 호출
   try {
@@ -30,15 +30,15 @@ export async function POST(req: Request) {
     console.log(data);
     if (data.results.common.errorCode !== "0") {
       //API에서 주는 errorMessage를 그대로 응답으로 보내줌
-      return reponse.error(data.results.common.errorMessage);
+      return response.error(data.results.common.errorMessage);
     }
     console.log(data);
     //주소 검색 결과가 정상이라면, 실제 주소 리스트만 응답으로 보냄(이때 data.results.juso가 주소 배열)
-    return reponse.success(data.results.juso);
+    return response.success(data.results.juso);
   } catch (error: any) {
     //axios 요청 자체가 실패했거나 예외가 나면 여기로 옴
     //에러 메시지를 담아 에러 응답 보냄
-    return reponse.error(error.message);
+    return response.error(error.message);
   }
 }
 

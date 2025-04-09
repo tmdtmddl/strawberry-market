@@ -18,3 +18,9 @@ interface Juso {
   zipNo: string;
   rest: string;
 }
+
+interface PromiseResult<T = any> {
+  success?: boolean;
+  message?: string;
+  data?: T;
+}

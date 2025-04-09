@@ -16,9 +16,9 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
   // 현재 선택된 주소 정보를 저장. 초기값은 가짜값 하나 넣어놓음.
   const [juso, setJuso] = useState<null | Juso>({
     id: "123123",
-    roadAddr: " ",
+    roadAddr: " 대전 중구 중앙로 121 ",
     zipNo: "",
-    rest: "",
+    rest: "501",
   });
   const [isPending, startTransition] = useTransition();
 
@@ -43,10 +43,12 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
           currentPage: 1,
           countPerPage: 20,
         });
+        console.log(data);
         //받은 데이터를 리스트에 넣고 보여주기 상태로 전환.
         setItems(data.map((item: any) => ({ ...item, id: item.bdMgtSn })));
         setIsShowing(true);
       } catch (error: any) {
+        console.log(error);
         alert(error.message);
       }
     });
@@ -84,12 +86,12 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
             // 이미 선택된 주소인지 체크.
             const select = addresses.find((address) => address.id === juso.id);
             return (
-              <li key={juso.id}>
+              <li key={juso.id} className="">
                 {/* 버튼을 누르면 주소 선택 상태로 저장하고 리스트 닫음. */}
                 <button
                   type="button"
                   className={twMerge(
-                    " w-full text-left h-10 px-2.5 rounded bg-gray-50/80",
+                    " w-full text-left h-10 px-2.5 rounded bg-gray-50/80 cursor-pointer hover:border hover:border-pink-500 hover:text-pink-400",
                     select && "text-pink-500"
                   )}
                   onClick={() => {
@@ -107,7 +109,10 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
       {juso && (
         <div className="flex flex-col gap-y-2.5 ">
           <div className="flex gap-x-2.5 ">
-            <button className="h-12 flex-1 text-left " type="button">
+            <button
+              className="h-12 flex-1 text-left border border-gray-100 px-2.5 rounded bg-gray-50 truncate"
+              type="button"
+            >
               {juso.roadAddr}
             </button>
             <SubmitButton

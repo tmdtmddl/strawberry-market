@@ -69,7 +69,7 @@ export const SubmitButton = ({
   <button
     {...props}
     className={twMerge(
-      " rounded p-2.5 bg-pink-300 text-white h-12",
+      "text-sm rounded p-2.5 bg-pink-500 text-white h-12",
       buttonClassName
     )}
   />
