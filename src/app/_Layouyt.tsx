@@ -31,7 +31,10 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
     Icon: IconType;
   }
   const menus = useMemo<MenuProps[]>(() => {
+    //만들어질 메뉴 리스트를 담을 배열
     const items: MenuProps[] = [];
+    //전체상품, 주문내역, 검색 같은 메뉴들을 템플릿으로 만들어둔 것
+    //필요할 때 items 배열에 추가만 하면 되게끔!
     const all: MenuProps = {
       name: "전체상품",
       href: "/products",
@@ -44,6 +47,7 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
     };
     const search: MenuProps = { name: "검색", href: "", Icon: IoSearchOutline };
 
+    //유저가 로그인 안 했을 경우 아이템s에 push한 로직
     if (!user) {
       items.push(
         all,
@@ -53,6 +57,7 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
         search
       );
     } else {
+      //로그인은 했지만, 셀러는 아닌 경우
       if (!user.sellerId) {
         items.push(
           all,
@@ -71,7 +76,7 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
         );
       }
     }
-
+    //최종 메뉴 반환(로그인 상태에 따라 조합된 메뉴 리스트를 menus에 담기)
     return items;
   }, [user]);
 
@@ -141,7 +146,10 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
               <li key={menu.name} className="flex-1">
                 <button
                   onClick={() => {
+                    //menu.href 있음	해당 페이지로 이동 (router.push)
+                    //menu.href 없음	검색창 열고, 포커스 줌 (setIsKeywordShowing, focus)
                     if (menu.href.length > 0) {
+                      console.log(menu.href);
                       return router.push(menu.href, { scroll: true });
                     }
                     console.log(menu.name);
