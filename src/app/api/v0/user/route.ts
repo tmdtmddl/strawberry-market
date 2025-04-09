@@ -34,7 +34,7 @@ export async function GET(req: Request) {
 
 //! POST => login // nono //cookie 삭제한는 곳 
 export async function POST(){
-    const cookieStore = await ...
+    const cookieStore = await ...dbService
 }
 
 //! PATCH => user정보 수정하는 곳
