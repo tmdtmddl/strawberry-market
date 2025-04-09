@@ -6,6 +6,7 @@ interface LoadingProps {
   divClassName?: string;
   iconClassName?: string;
   messageClassName?: string;
+
   message?: string;
 }
 
@@ -19,8 +20,8 @@ const Loading = ({
   return (
     <div
       className={twMerge(
-        "absolute top-[50%] left-[50%] size-full flex flex-col gap-y-2.5 items-center justify-center z-50",
-        fixed ? "fixed top-0 left-0 w-screen h-screen " : "translate-[-50%]",
+        "absolute top-[50%] left-[50%] size-full flex flex-col gap-y-2.5 items-center justify-center",
+        fixed ? "fixed top-0 left-0 w-screen h-screen" : "translate-[-50%]",
         divClassName
       )}
     >
@@ -31,7 +32,7 @@ const Loading = ({
         )}
       />
       <p className={twMerge("text-xl animate-pulse", messageClassName)}>
-        {message ?? "is loading"}
+        {message ?? "is loading..."}
       </p>
     </div>
   );

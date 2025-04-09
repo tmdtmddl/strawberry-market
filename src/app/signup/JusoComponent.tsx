@@ -17,8 +17,8 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
   const [juso, setJuso] = useState<null | Juso>({
     id: "123123",
     roadAddr: " 대전 중구 중앙로 121 ",
-    zipNo: "",
-    rest: "501",
+    zipNo: "34838",
+    rest: "",
   });
   const [isPending, startTransition] = useTransition();
 
@@ -54,10 +54,10 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
     });
   }, [keyword, message]);
   return (
-    <div className="relative flex flex-col gap-y-2.5">
-      {isPending && <Loading divClassName="bg-white/80" />}
-      <div>
-        <div className="flex items-end gap-x-2.5 ">
+    <div>
+      <div className="relative ">
+        <div className="flex items-end gap-x-2.5">
+          {isPending && <Loading divClassName="bg-white/80" />}
           <TextInput
             divClassName="flex-1"
             label="기본배송지"
@@ -71,28 +71,34 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
             type="button"
             onClick={onSubmit}
             //클릭하면 검색 함수 실행.
-            className="px-2.5 size-12 flex justify-center"
+            className="px-2.5 size-12 flex justify-center items-center text-2xl"
           >
             <AiOutlineSearch className="text-2xl" />
           </SubmitButton>
         </div>
         {/* 메세지가있으면 메시지 보여줌. */}
-        {message && <label className="text-red-500 text-sm">{message}</label>}
+        {message && (
+          <label htmlFor="address" className="text-red-500 text-xs">
+            {message}
+          </label>
+        )}
       </div>
       {isShowing && (
         <ul className="mt-2.5 flex flex-col gap-y-1.5">
           {/* 검색된 주소 리스트를 보여줌. */}
           {items.map((juso) => {
             // 이미 선택된 주소인지 체크.
-            const select = addresses.find((address) => address.id === juso.id);
+            const selected = addresses.find(
+              (address) => address.id === juso.id
+            );
             return (
-              <li key={juso.id} className="">
+              <li key={juso.id}>
                 {/* 버튼을 누르면 주소 선택 상태로 저장하고 리스트 닫음. */}
                 <button
                   type="button"
                   className={twMerge(
-                    " w-full text-left h-10 px-2.5 rounded bg-gray-50/80 cursor-pointer hover:border hover:border-pink-500 hover:text-pink-400",
-                    select && "text-pink-500"
+                    "w-full text-left h-10 px-2.5 rounded bg-gray-50/80",
+                    selected && "text-pink-500"
                   )}
                   onClick={() => {
                     setIsShowing(false);
@@ -107,10 +113,10 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
         </ul>
       )}
       {juso && (
-        <div className="flex flex-col gap-y-2.5 ">
+        <div className="flex flex-col gap-y-2.5  mt-2.5">
           <div className="flex gap-x-2.5 ">
             <button
-              className="h-12 flex-1 text-left border border-gray-100 px-2.5 rounded bg-gray-50 truncate"
+              className="h-12 flex-1 text-left px-2.5 rounded bg-gray-50 truncate"
               type="button"
             >
               {juso.roadAddr}
@@ -132,11 +138,12 @@ const JusoComponent = ({ addresses, onChangeAddress }: JusoComponentProps) => {
               name="rest"
               placeholder="501호"
               label="상세주소"
+              divClassName="flex-1"
             />
             {/* 주소 정보를 부모 컴포넌트로 전달하고 선택 초기화. */}
             <SubmitButton
               type="button"
-              className="px-2.5 flex-1 text-shadow-md"
+              className="px-2.5 "
               onClick={() => {
                 onChangeAddress(juso);
                 setJuso(null);

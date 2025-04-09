@@ -6,12 +6,14 @@ export const TextInput = ({
   label,
   labelClassName,
   divClassName,
+  messageClassName,
   message,
   ...props
 }: React.ComponentProps<"input"> & {
   label?: string;
   labelClassName?: string;
   divClassName?: string;
+  messageClassName?: string;
   message?: string | null;
 }) => {
   return (
@@ -36,7 +38,7 @@ export const TextInput = ({
       {message && (
         <label
           htmlFor={props?.id ?? props?.name}
-          className={twMerge("text-red-500 text-xs", labelClassName)}
+          className={twMerge("text-red-500 text-xs", messageClassName)}
         >
           {message}
         </label>
@@ -57,7 +59,7 @@ export const Form = (props: React.ComponentProps<"form">) => (
         props.onSubmit(e);
       }
     }}
-    className={twMerge("flex flex-col gap-y-2.5", props.className)}
+    className={twMerge("flex flex-col gap-y-2.5", props?.className)}
   />
 );
 
@@ -68,9 +70,6 @@ export const SubmitButton = ({
 }: React.ComponentProps<"button"> & { buttonClassName?: string }) => (
   <button
     {...props}
-    className={twMerge(
-      "text-sm rounded p-2.5 bg-pink-500 text-white h-12",
-      buttonClassName
-    )}
+    className={twMerge("h-12 rounded bg-pink-500 text-white", props?.className)}
   />
 );

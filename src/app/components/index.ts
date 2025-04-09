@@ -1,1 +1,1 @@
-export * as Signup from "../signup/page";
+export * from "./ui";

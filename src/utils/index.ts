@@ -14,7 +14,11 @@ export function emailValidator(email: string) {
   return null;
 }
 
-export function pwValidator(pwd: string, min: number = 6, max: number = 18) {
+export function passwordValidator(
+  pwd: string,
+  min: number = 6,
+  max: number = 18
+) {
   if (pwd.length === 0) {
     return "비밀번호를 입력해주세요";
   }

@@ -11,13 +11,28 @@ export async function middleware(req: NextRequest) {
   }
   const cookieStore = await cookies();
   const token = cookieStore.get("idToken");
-  const idToken = token?.value;
-  if (!token || idToken?.length === 0) {
-    return NextResponse.redirect(" /");
+  const baseUrl = "http://localhost:3000";
+  const next = () => {
+    console.log("no access", uid);
+    NextResponse.redirect(baseUrl);
+  };
+  if (!token) {
+    return next();
   }
-  const { data } = await axios.post(process.env.NEXT_PUBLIC_FB_URL!, idToken);
+  const idToken = token.value;
+  if (!idToken || idToken.length === 0) {
+    return next();
+  }
+
+  const { data } = await axios.post(process.env.NEXT_PUBLIC_FB_URL!, {
+    idToken,
+  });
   if (!data || !data.users || data.users.length === 0) {
-    return NextResponse.redirect("/");
+    return next();
+  }
+  const foundUser = data.users.find((user: any) => user.localId === uid);
+  if (!foundUser) {
+    return next();
   }
 
   return NextResponse.next();
