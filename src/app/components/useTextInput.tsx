@@ -14,8 +14,10 @@ interface Props extends ComponentProps<"input"> {
   label?: string;
   labelClassName?: string;
   containerClassName?: string;
+  messageClassName?: string;
   contentClassName?: string;
   onChangeText?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
+  message?: string | null;
 }
 
 const useTextInput = () => {
@@ -28,9 +30,11 @@ const useTextInput = () => {
 
   const TextInput = useCallback(
     ({
+      message,
       label,
       containerClassName,
       contentClassName,
+      messageClassName,
       labelClassName,
       onChangeText,
       ...props
@@ -66,6 +70,14 @@ const useTextInput = () => {
               ref={ref}
             />
           </div>
+          {message && (
+            <label
+              htmlFor={props.id ?? inputId}
+              className={twMerge("text-red-500 text-xs", messageClassName)}
+            >
+              {message}
+            </label>
+          )}
         </div>
       );
     },
