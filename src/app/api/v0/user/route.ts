@@ -1,6 +1,5 @@
 import { dbService, response } from "@/lib";
 import { cookies } from "next/headers";
-import { NextRequest } from "next/server";
 
 //! GET => user 정보 가져오는 곳
 export async function GET(req: Request) {
@@ -43,29 +42,33 @@ export async function GET(req: Request) {
 export async function POST() {
   const cookieStore = await cookies();
   cookieStore.delete("idToken");
+  console.log("cookie deleted, user logged out");
   return response.success("id token bye-bye");
 }
 
 //! PATCH => user 정보 수정하는 곳
-export async function PATCH(req: NextRequest) {
+export async function PATCH(req: Request) {
   const data = await req.json();
-  console.log(data, 52);
+  console.log(data, 45);
+
   const auth = req.headers.get("authorization");
   if (!auth) {
-    return response.error("no");
+    return response.error("no uid");
   }
-  const uid = auth?.split(" ")[1];
-  if (!uid) {
-    return response.error("no");
+  const uid = auth.split(" ")[1];
+  if (!uid || uid.length === 0) {
+    return response.error("no uid");
   }
+
   const { target, value } = data as { target: keyof User; value: any };
 
   const ref = dbService.collection("users").doc(uid);
-  // try {
-  //   await ref.update();
-  // } catch (error:any) {
-  //   return response.error(error.message)
-  // }
+  try {
+    await ref.update({ [target]: value });
+    return response.success<PromiseResult>({ success: true });
+  } catch (error: any) {
+    return response.error(error.message);
+  }
 }
 
 //! DELETE => user 탈퇴 곳

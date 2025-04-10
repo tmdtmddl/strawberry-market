@@ -5,14 +5,15 @@ import { twMerge } from "tailwind-merge";
 
 const useModal = () => {
   const [showing, setShowing] = useState(false);
+
   const open = useCallback(() => setShowing(true), []);
   const hide = useCallback(() => setShowing(false), []);
 
   const Modal = useCallback(
     ({
       children,
-      shadowClassName,
       className,
+      shadowClassName,
       containerClassName,
     }: {
       className?: string;
@@ -22,15 +23,14 @@ const useModal = () => {
       return !showing ? null : (
         <div
           className={twMerge(
-            "fixed top-0 left-0 w-full h-screen flex justify-center items-center",
+            "fixed top-0 left-0 w-full h-screen flex justify-center items-center z-10",
             !showing && "hidden",
             containerClassName
           )}
         >
           <div
             className={twMerge(
-              "bg-white rounded-2xl mt-5 transition-all ",
-
+              "bg-white rounded-2xl duration-300 ease-in-out relative z-10",
               className
             )}
           >
@@ -39,7 +39,7 @@ const useModal = () => {
           <span
             onClick={hide}
             className={twMerge(
-              "absolute top-0 left-0 w-full h-full bg-black/3 -z-10",
+              "absolute top-0 left-0 w-full h-full bg-black/3",
               shadowClassName
             )}
           />
@@ -51,8 +51,9 @@ const useModal = () => {
 
   return {
     Modal,
-    hide,
     open,
+    hide,
+    showing,
   };
 };
 

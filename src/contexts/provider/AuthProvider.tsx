@@ -23,21 +23,17 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       if (!fbUser) {
         setUser(null);
       } else {
-        try {
-          const idToken = await fbUser.getIdToken();
-          const { data } = await axios.get("/api/v0/user", {
-            params: {
-              uid: fbUser.uid,
-            },
-            headers: {
-              Authorization: `Bearer ${idToken}`,
-            },
-          });
-          if (data) {
-            setUser(data);
-          }
-        } catch (error: any) {
-          console.log(error);
+        const idToken = await fbUser.getIdToken();
+        const { data } = await axios.get("/api/v0/user", {
+          params: {
+            uid: fbUser.uid,
+          },
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
+        if (data) {
+          setUser(data);
         }
       }
 
@@ -51,7 +47,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   // client 유저를 로그아웃
   //! server에서 쿠키 내용을 삭제
   const signout = useCallback(
-    () =>
+    (): Promise<PromiseResult> =>
       new Promise<PromiseResult>((ok) =>
         startTransition(async () => {
           try {
@@ -135,20 +131,15 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       new Promise<PromiseResult>((ok) =>
         startTransition(async () => {
           try {
-            const { data } = await axios.patch("api/v0/user", {
-              data: {
-                target,
-                value,
-                //uid:user?.uid //! 1번 방법
-              },
-              headers: {
-                Authroization: `Bearer ${user?.uid}`,
-              },
+            const { data } = await axios.patch("/api/v0/user", {
+              target,
+              value,
+              // uid: user?.uid,//! 1번 방법
             });
             setUser((prev) => prev && { ...prev, [target]: value });
             ok(data);
-          } catch (error) {
-            ok({ success: false });
+          } catch (error: any) {
+            ok({ success: false, message: error.response.data });
           }
         })
       ),
@@ -159,6 +150,23 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     console.log({ user });
   }, [user]);
 
+  const onTest = useCallback(async () => {
+    const idToken = await authService.currentUser?.getIdToken();
+    try {
+      console.log(axios.defaults.baseURL);
+      const { data } = await axios.get("api/v0/user", {
+        params: {
+          uid: authService.currentUser?.uid,
+        },
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      });
+      console.log(data);
+    } catch (error: any) {
+      console.log(error);
+    }
+  }, []);
   return (
     <AUTH.context.Provider
       value={{

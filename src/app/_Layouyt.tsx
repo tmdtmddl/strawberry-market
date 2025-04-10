@@ -94,10 +94,10 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full h-15 border-b border-gray-200 bg-white z-40">
+      <header className="fixed top-0 left-0 w-full h-15 border-b border-gray-200 bg-white">
         <div className="mx-auto max-w-225 flex">
           <button
-            className="h-15 text-pink-500 text-xl flex items-center px-2.5 gap-x-2.5 cursor-pointer"
+            className="h-15 text-pink-500 text-xl flex items-center px-2.5 gap-x-2.5"
             onClick={() => {
               if (pathname !== "/") {
                 return router.push("/", { scroll: true });
@@ -133,10 +133,7 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
         </div>
       </header>
 
-      <main className="py-15 min-h-screen">
-        {children}
-        {/* {user && <button onClick={signout}>로그아웃</button>} */}
-      </main>
+      <main className="py-15 min-h-screen">{children}</main>
 
       <nav className="fixed bottom-0 left-0 w-full h-15 border-t border-gray-200 bg-white">
         <ul className="flex">
@@ -150,7 +147,6 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
                     //menu.href 있음	해당 페이지로 이동 (router.push)
                     //menu.href 없음	검색창 열고, 포커스 줌 (setIsKeywordShowing, focus)
                     if (menu.href.length > 0) {
-                      console.log(menu.href, 153);
                       return router.push(menu.href, { scroll: true });
                     }
                     console.log(menu.name);
@@ -158,7 +154,7 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
                     focus();
                   }}
                   className={twMerge(
-                    "w-full h-15 flex justify-center items-center flex-col text-xs cursor-pointer",
+                    "w-full h-15 flex justify-center items-center flex-col text-xs",
                     selected ? "text-pink-500" : "text-gray-500"
                   )}
                 >
