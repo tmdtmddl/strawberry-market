@@ -13,55 +13,57 @@ import { twMerge } from "tailwind-merge";
 interface Props extends ComponentProps<"input"> {
   label?: string;
   labelClassName?: string;
-  contentClassName?: string;
   containerClassName?: string;
-  onChangText?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
+  contentClassName?: string;
+  onChangeText?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
 }
+
 const useTextInput = () => {
   const [focused, setFocused] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
-  const focus = useCallback(
-    () => setTimeout(() => ref.current?.focus(), 100),
-    []
-  );
-
+  const focus = useCallback(() => {
+    setTimeout(() => ref.current?.focus(), 100);
+  }, []);
   const inputId = useId();
 
   const TextInput = useCallback(
     ({
       label,
-      labelClassName,
       containerClassName,
       contentClassName,
-      onChangText,
+      labelClassName,
+      onChangeText,
       ...props
     }: Props) => {
       return (
         <div className={twMerge("gap-1", containerClassName)}>
           {label && (
             <label
-              htmlFor={props?.id ?? inputId}
+              htmlFor={props.id ?? inputId}
               className={twMerge("text-gray-500 text-xs", labelClassName)}
             >
               {label}
             </label>
           )}
-          <div className={contentClassName}>
+          <div className={twMerge("h-12", contentClassName)}>
             <input
               {...props}
               id={props?.id ?? inputId}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
               onChange={(e) => {
-                if (onChangText) {
-                  return onChangText(e.target.value, e);
+                if (onChangeText) {
+                  onChangeText(e.target.value, e);
                 }
                 if (props?.onChange) {
                   props.onChange(e);
                 }
               }}
-              onFocus={() => setFocused(true)}
-              onBlur={() => setFocused(false)}
+              className={twMerge(
+                "flex-1 w-full outline-none px-5 rounded border border-gray-200 focus:text-theme focus:border-theme",
+                props?.className
+              )}
               ref={ref}
-              className={twMerge("outline-none", props?.className)}
             />
           </div>
         </div>
@@ -69,7 +71,8 @@ const useTextInput = () => {
     },
     [inputId]
   );
-  return { TextInput, focus };
+
+  return { TextInput, focus, focused, ref };
 };
 
 export default useTextInput;

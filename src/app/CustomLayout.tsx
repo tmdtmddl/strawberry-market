@@ -1,13 +1,8 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  PropsWithChildren,
-  useState,
-  useMemo,
-  useRef,
-  useCallback,
-} from "react";
+import { PropsWithChildren, useState, useMemo, useCallback } from "react";
 import { IconType } from "react-icons";
 import { GiStrawberry } from "react-icons/gi";
 import {
@@ -53,15 +48,7 @@ const CustomLayout = ({ children }: PropsWithChildren) => {
   }, []);
 
   const pathname = usePathname();
-
   const Keyword = useTextInput();
-
-  const ref = useRef<HTMLInputElement>(null);
-  const focus = useCallback(
-    () => setTimeout(() => ref.current?.focus(), 100),
-    []
-  );
-  const [focused, setFocused] = useState(false);
   const [keyword, setKeyword] = useState("");
 
   return (
@@ -73,36 +60,33 @@ const CustomLayout = ({ children }: PropsWithChildren) => {
             className="text-xl gap-x-2.5 text-theme font-black h-15"
           >
             <GiStrawberry className="text-3xl" />
-            {!focused && " 딸기마켓"}
+            {!Keyword.focused && " 딸기마켓"}
           </Link>
           <Keyword.TextInput
-            type="text"
-            className={twMerge(
-              "flex-1 w-full outline-none pr-2.5",
-              focused && "text-theme"
-            )}
-            ref={ref}
             value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
+            onChangeText={setKeyword}
+            placeholder="검색어를 입력해주세요."
             onKeyDown={(e) => {
               const { key, nativeEvent } = e;
               if (key === "Enter" && !nativeEvent.isComposing) {
                 if (keyword.length === 0) {
                   alert("검색어를 입력해주세요.");
-                  return Keyword.focus();
+                  return focus();
                 }
                 console.log("검색 ㄱㄱ");
               }
             }}
+            className={twMerge(
+              "pl-0 border-none",
+              Keyword.focused && "text-theme"
+            )}
             containerClassName="flex-1"
-            contentClassName="h-15 border"
+            contentClassName="h-15"
           />
         </div>
       </header>
 
-      <main>{children}</main>
+      <main className="py-15">{children}</main>
 
       <nav className="border-t border-gray-200 fixed bottom-0 left-0 w-full bg-white z-10">
         <ul className="flex-row gap-0">
@@ -119,7 +103,7 @@ const CustomLayout = ({ children }: PropsWithChildren) => {
                   )}
                   onClick={() => {
                     if (menu.name === "검색" || menu.href.length === 0) {
-                      focus();
+                      Keyword.focus();
                     }
                   }}
                 >
