@@ -123,6 +123,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     (target: keyof User, value: any) =>
       new Promise<Result>((resolve) =>
         startTransition(async () => {
+          // console.log(target, 133); target은 User타입의 키를 문자열로 전달함 예로"email", "name", "uid", "sellerId", "createdAt"(키 이름을 문자열로 출력)
           try {
             if (!user) {
               return resolve({
