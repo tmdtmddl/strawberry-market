@@ -1,5 +1,5 @@
 "use client";
-
+import { useTextInput } from "./components";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PropsWithChildren, useState, useMemo, useCallback } from "react";
@@ -12,7 +12,6 @@ import {
   IoSearchOutline,
 } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
-import { useTextInput } from "./components";
 
 const user = null;
 const CustomLayout = ({ children }: PropsWithChildren) => {

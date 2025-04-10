@@ -22,9 +22,7 @@ export const Form = ({
       )}
     >
       {props?.children}
-      <div className="mt-2.5 flex-row"> {Submit}</div>
+      <div className="mt-2.5 flex-row">{Submit}</div>
     </form>
   );
 };
-
-export default Form;

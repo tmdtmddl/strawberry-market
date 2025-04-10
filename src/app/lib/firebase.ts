@@ -29,10 +29,10 @@ export {
   authService,
   dbService,
   storageService,
-  firebase,
   auth,
   firestore,
   storage,
+  firebase,
 };
 
 export enum FBCollection {

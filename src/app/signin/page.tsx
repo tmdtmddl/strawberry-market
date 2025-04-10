@@ -1,18 +1,20 @@
 "use client";
 
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Form, useTextInput } from "../components";
+import { AUTH } from "@/contexts";
 import { emailValidator, passwordValidator } from "@/utils";
-import { AUTH } from "@/contexts/react.context";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 
 const Signin = () => {
+  const { user } = AUTH.use();
+
   const [loginProps, setLoginProps] = useState({
     email: "test@test.com",
-    password: "1231212",
+    password: "123123",
   });
   const Email = useTextInput();
   const Password = useTextInput();
-  const { user } = AUTH.use();
+
   const onChangeL = useCallback(
     (value: string, event: ChangeEvent<HTMLInputElement>) => {
       setLoginProps((prev) => ({ ...prev, [event.target.name]: value }));
@@ -42,11 +44,11 @@ const Signin = () => {
   }, [emailMessage, passwordMessage, loginProps, Email, Password]);
 
   useEffect(() => {
-    console.log(loginProps);
-  }, [loginProps]);
+    console.log(loginProps, user);
+  }, [loginProps, user]);
 
-  if (!user) {
-    console.log("no user");
+  if (user) {
+    return <h1>유저에게 제한된 페이지 입니다.</h1>;
   }
 
   return (
@@ -61,7 +63,7 @@ const Signin = () => {
         name="email"
         label="이메일"
         message={emailMessage}
-        placeholder="email@email.com"
+        placeholder="eamil@email.com"
         autoCapitalize="none"
       />
       <Password.TextInput
@@ -70,7 +72,7 @@ const Signin = () => {
         name="password"
         label="비밀번호"
         message={passwordMessage}
-        placeholder="******"
+        placeholder="* * * * * * * *"
         type="password"
       />
     </Form>

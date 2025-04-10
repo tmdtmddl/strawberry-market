@@ -1,2 +1,2 @@
 export { default as AppProvider } from "./providers";
-export * from "./react.context/authContext";
+export * from "./react.context";
