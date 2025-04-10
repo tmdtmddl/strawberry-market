@@ -86,11 +86,13 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
             //! 회원가입 정보를 데이터베이스 저장
             //@ts-ignore
             delete newUser.password;
+            //{}는 새로운 객체를 만들 준비,storedUser는 newUser랑 똑같은 값을 가지지만, 별개의 객체가 됨(원래 객체를 그대로 참조하는 게 아니라, 값만 복사해서 새 객체를 만드는 것!)
             const storedUser: User = { ...newUser };
             console.log(storedUser);
 
             //@ts-ignore
             delete storesUser.password;
+            //storedUser를 .set()으로 저장 (새 문서 생성 또는 기존 문서 덮어쓰기)
             await ref.doc(user.uid || storedUser.uid).set(storedUser);
 
             return resolve({ success: true });
