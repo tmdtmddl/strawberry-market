@@ -1,2 +1,3 @@
 export * from "./Inputs";
 export { default as Loading } from "./Loading";
+export { default as useModal } from "./useModal";

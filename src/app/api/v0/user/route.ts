@@ -1,5 +1,6 @@
 import { dbService, response } from "@/lib";
 import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 
 //! GET => user 정보 가져오는 곳
 export async function GET(req: Request) {
@@ -46,5 +47,25 @@ export async function POST() {
 }
 
 //! PATCH => user 정보 수정하는 곳
+export async function PATCH(req: NextRequest) {
+  const data = await req.json();
+  console.log(data, 52);
+  const auth = req.headers.get("authorization");
+  if (!auth) {
+    return response.error("no");
+  }
+  const uid = auth?.split(" ")[1];
+  if (!uid) {
+    return response.error("no");
+  }
+  const { target, value } = data as { target: keyof User; value: any };
+
+  const ref = dbService.collection("users").doc(uid);
+  // try {
+  //   await ref.update();
+  // } catch (error:any) {
+  //   return response.error(error.message)
+  // }
+}
 
 //! DELETE => user 탈퇴 곳

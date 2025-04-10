@@ -1,5 +1,6 @@
 "use client";
 import { AUTH } from "@/contexts";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   PropsWithChildren,
@@ -61,14 +62,14 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
       if (!user.sellerId) {
         items.push(
           all,
-          { ...order, href: `/order?uid=${user.uid}` },
+          { ...order, href: `/${user.uid}/order` },
           {
-            href: `/products?uid=${user.uid}`,
+            href: `/${user.uid}/products`,
             Icon: IoCubeOutline,
             name: "나의상품",
           },
           {
-            href: `/cart?uid=${user.uid}`,
+            href: `/${user.uid}/cart`,
             Icon: IoBasketOutline,
             name: "장바구니",
           },
@@ -96,7 +97,7 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
       <header className="fixed top-0 left-0 w-full h-15 border-b border-gray-200 bg-white z-40">
         <div className="mx-auto max-w-225 flex">
           <button
-            className="h-15 text-pink-500 text-xl flex items-center px-2.5 gap-x-2.5"
+            className="h-15 text-pink-500 text-xl flex items-center px-2.5 gap-x-2.5 cursor-pointer"
             onClick={() => {
               if (pathname !== "/") {
                 return router.push("/", { scroll: true });
@@ -134,7 +135,7 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
 
       <main className="py-15 min-h-screen">
         {children}
-        {user && <button onClick={signout}>로그아웃</button>}
+        {/* {user && <button onClick={signout}>로그아웃</button>} */}
       </main>
 
       <nav className="fixed bottom-0 left-0 w-full h-15 border-t border-gray-200 bg-white">
@@ -149,7 +150,7 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
                     //menu.href 있음	해당 페이지로 이동 (router.push)
                     //menu.href 없음	검색창 열고, 포커스 줌 (setIsKeywordShowing, focus)
                     if (menu.href.length > 0) {
-                      console.log(menu.href);
+                      console.log(menu.href, 153);
                       return router.push(menu.href, { scroll: true });
                     }
                     console.log(menu.name);
@@ -157,7 +158,7 @@ const Root_Layout = ({ children }: PropsWithChildren) => {
                     focus();
                   }}
                   className={twMerge(
-                    "w-full h-15 flex justify-center items-center flex-col text-xs",
+                    "w-full h-15 flex justify-center items-center flex-col text-xs cursor-pointer",
                     selected ? "text-pink-500" : "text-gray-500"
                   )}
                 >
