@@ -19,7 +19,7 @@ export function passwordValidator(
   min: number = 6,
   max: number = 18
 ) {
-  if (pwd.length === 0) {
+  if (pwd.length === 0 || !pwd) {
     return "비밀번호를 입력해주세요";
   }
   if (pwd.length < min || pwd.length > max) {

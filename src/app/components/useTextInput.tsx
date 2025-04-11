@@ -17,6 +17,7 @@ interface Props extends ComponentProps<"input"> {
   containerClassName?: string;
   messageClassName?: string;
   onChangeText?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
+  onSubmitEditing?: () => void;
   message?: string | null;
 }
 
@@ -38,6 +39,7 @@ const useTextInput = () => {
       contentClassName,
       containerClassName,
       messageClassName,
+      onSubmitEditing,
       ...props
     }: Props) => {
       return (
@@ -69,6 +71,15 @@ const useTextInput = () => {
                 props?.className
               )}
               ref={ref}
+              onKeyDown={(e) => {
+                const { key, nativeEvent } = e;
+
+                if (key === "Enter" && !nativeEvent.isComposing) {
+                  if (onSubmitEditing) {
+                    onSubmitEditing();
+                  }
+                }
+              }}
             />
           </div>
           {message && (

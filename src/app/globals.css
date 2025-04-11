@@ -22,4 +22,9 @@
   .primary {
     @apply bg-theme text-white;
   }
+  .modal.con {
+    @apply fixed top-0 left-0 w-full h-screen z-10;
+  }
 }
+
+/* css animation // keyframs 추후 공부 */
