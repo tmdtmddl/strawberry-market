@@ -1,12 +1,11 @@
-"use client";
-
-import { dbService } from "./lib";
+// "use client";
+// import { dbService } from "./lib";
 
 const Home = () => {
   return (
     <div>
       <h1>Home</h1>
-      <button
+      {/* <button
         onClick={async () => {
           const ref = dbService.collection("todo");
           try {
@@ -18,7 +17,7 @@ const Home = () => {
         }}
       >
         dummy
-      </button>
+      </button> */}
     </div>
   );
 };

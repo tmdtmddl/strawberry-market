@@ -1,13 +1,14 @@
 "use client";
 
-import { useNavi } from "@/hooks";
 import { Form, useTextInput } from "../components";
 import { AUTH } from "@/contexts";
+import { useNavi } from "@/hooks";
 import { emailValidator, passwordValidator } from "@/utils";
-import { useRouter } from "next/navigation";
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 
 const Signin = () => {
+  //! useEffect 등으로 모든 회원의 이메일을 가져오기
+
   const { user, signin } = AUTH.use();
 
   const [loginProps, setLoginProps] = useState({
@@ -16,7 +17,6 @@ const Signin = () => {
   });
   const Email = useTextInput();
   const Password = useTextInput();
-  const { navi } = useNavi();
 
   const onChangeL = useCallback(
     (value: string, event: ChangeEvent<HTMLInputElement>) => {
@@ -34,8 +34,9 @@ const Signin = () => {
     [loginProps.password]
   );
 
+  //! next/navigation (O) !== next/router (X)
+  const { navi } = useNavi();
   const onSubmit = useCallback(async () => {
-    //! useEffect 모든 회원의 이메일 가져오기
     if (emailMessage) {
       alert(emailMessage);
       return Email.focus();
@@ -44,20 +45,17 @@ const Signin = () => {
       alert(passwordMessage);
       return Password.focus();
     }
-    console.log({ loginProps });
 
     const { success, message } = await signin(
       loginProps.email,
       loginProps.password
     );
-
     if (!success || message) {
-      return alert(message ?? "무슨문제임???");
+      return alert(message ?? "문제생김");
     }
-    alert(`${loginProps.email}님 환영합니다.`);
-
-    return navi("/");
-  }, [emailMessage, passwordMessage, loginProps, Email, Password]);
+    alert("환영합니다.");
+    navi("/");
+  }, [emailMessage, passwordMessage, loginProps, Email, Password, navi]);
 
   if (user) {
     return <h1>유저에게 제한된 페이지 입니다.</h1>;
@@ -65,13 +63,13 @@ const Signin = () => {
 
   return (
     <Form
-      buttonClassName="flex-col "
+      btnClassName="flex-col "
       Submit={
         <>
           <button className="primary">로그인</button>
           <button
-            type="button"
             className="bg-gray-100"
+            type="button"
             onClick={() => navi("/signup")}
           >
             회원가입

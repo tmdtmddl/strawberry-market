@@ -3,6 +3,7 @@
 import {
   ChangeEvent,
   ComponentProps,
+  KeyboardEvent,
   useCallback,
   useId,
   useRef,
@@ -16,9 +17,10 @@ interface Props extends ComponentProps<"input"> {
   contentClassName?: string;
   containerClassName?: string;
   messageClassName?: string;
-  onChangeText?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
-  onSubmitEditing?: () => void;
   message?: string | null;
+
+  onChangeText?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
+  onSubmitEditing?: (e: KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const useTextInput = () => {
@@ -73,10 +75,12 @@ const useTextInput = () => {
               ref={ref}
               onKeyDown={(e) => {
                 const { key, nativeEvent } = e;
-
                 if (key === "Enter" && !nativeEvent.isComposing) {
                   if (onSubmitEditing) {
-                    onSubmitEditing();
+                    onSubmitEditing(e);
+                  }
+                  if (props?.onKeyDown) {
+                    props.onKeyDown(e);
                   }
                 }
               }}

@@ -1,6 +1,6 @@
 "use client";
 
-//router 할때 헷갈리지 않아도됨
+//! router/navigation   헷갈리지 않아도 됨
 
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";

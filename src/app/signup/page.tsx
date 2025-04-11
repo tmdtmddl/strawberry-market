@@ -1,26 +1,33 @@
 "use client";
 
-import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
-import { Form, useTextInput } from "../components";
+import { Form, Loading, useTextInput } from "../components";
 import {
   emailValidator,
   korValidator,
   mobileValidator,
   passwordValidator,
 } from "@/utils";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import JusoComponent, { JusoRef } from "./JusoComponent";
 import { AUTH } from "@/contexts";
-import Loading from "../components/Loading";
 import { useNavi } from "@/hooks";
 
-// type Signup = User & {password:string}
+// SSR 나중에 해보기
 
-interface Signiup extends User {
+// type SignupProps = User & { password: string }
+interface SignupProps extends User {
   password: string;
 }
 
 const Signup = () => {
-  const [signupProps, setSignupProps] = useState<Signiup>({
+  const [signupProps, setSignupProps] = useState<SignupProps>({
     createdAt: new Date(),
     email: "test@test.com",
     name: "김딸기",
@@ -30,17 +37,24 @@ const Signup = () => {
     jusoes: [],
     mobile: "01012341234",
   });
-
+  // de-structure // parse
   const { email, name, password, jusoes, mobile } = signupProps;
-  const [contirmPassword, setContirmPassword] = useState("123123");
-
-  const jusoRef = useRef<JusoRef>(null);
+  const [confirmPassword, setConfirmPassword] = useState("123123");
 
   const Email = useTextInput();
   const Password = useTextInput();
   const ConfirmPassword = useTextInput();
   const Name = useTextInput();
   const Mobile = useTextInput();
+
+  const jusoRef = useRef<JusoRef>(null);
+
+  const onChangeS = useCallback(
+    (value: string, event: ChangeEvent<HTMLInputElement>) => {
+      setSignupProps((prev) => ({ ...prev, [event.target.name]: value }));
+    },
+    []
+  );
 
   const nameMessage = useMemo(() => korValidator(name), [name]);
   const mobileMessage = useMemo(() => mobileValidator(mobile), [mobile]);
@@ -50,22 +64,19 @@ const Signup = () => {
     [password]
   );
   const confirmPasswordMessage = useMemo(() => {
-    if (passwordValidator(contirmPassword)) {
-      return passwordValidator(contirmPassword);
+    if (passwordValidator(confirmPassword)) {
+      return passwordValidator(confirmPassword);
     }
-    if (password !== contirmPassword) {
+    // 위의 Validation == null
+    if (password !== confirmPassword) {
       return "비밀번호가 일치하지 않습니다.";
     }
-  }, [contirmPassword]);
+    return null;
+  }, [password, confirmPassword]);
+  //! zod , react-hook-form
 
-  const onChangeS = useCallback(
-    (value: string, event: ChangeEvent<HTMLInputElement>) => {
-      setSignupProps((prev) => ({ ...prev, [event.target.name]: value }));
-    },
-    [signupProps]
-  );
-  const { navi } = useNavi();
   const { user, signup, isPending } = AUTH.use();
+  const { navi } = useNavi();
   const onSubmit = useCallback(async () => {
     if (nameMessage) {
       alert(nameMessage);
@@ -88,31 +99,38 @@ const Signup = () => {
       return ConfirmPassword.focus();
     }
     if (jusoes.length === 0) {
-      alert("기본배송지를 입력해주세요.");
+      alert("기본 배송지를 입력해주세요.");
       jusoRef.current?.openModal();
       jusoRef.current?.focusKeyword();
       return;
     }
+
     const { success, message } = await signup(signupProps);
     if (!success || message) {
-      return alert(message ?? "회원가입시 문제가 발생했습니다.");
+      return alert(message ?? "회원가입 시 문제가 발생했습니다.");
     }
+
     alert("회원가입을 축하합니다.");
     navi("/");
   }, [
+    navi,
     nameMessage,
-    emailMessage,
     mobileMessage,
+    emailMessage,
     passwordMessage,
     confirmPasswordMessage,
     jusoes,
     signupProps,
     signup,
+    // jusoRef,
   ]);
 
+  useEffect(() => {
+    console.log(signupProps, user);
+  }, [signupProps, user]);
   return (
     <div className="">
-      {isPending && <Loading container="" warp="" />}
+      {isPending && <Loading />}
       <Form
         onSubmit={onSubmit}
         className="w-full p-5"
@@ -120,17 +138,17 @@ const Signup = () => {
       >
         <Name.TextInput
           onChangeText={onChangeS}
-          label=" 이름"
-          placeholder="예)박보검"
+          label="이름"
+          placeholder="예) 박보검"
           name="name"
           value={name}
           message={nameMessage}
         />
         <Mobile.TextInput
           onChangeText={onChangeS}
-          label=" 전화번호"
-          placeholder="010"
-          name="moMobile"
+          label="휴대전화 번호"
+          placeholder="010-1234-1234"
+          name="mobile"
           value={mobile}
           message={mobileMessage}
         />
@@ -138,26 +156,29 @@ const Signup = () => {
           value={email}
           onChangeText={onChangeS}
           label="이메일"
-          placeholder="**@**.**"
+          placeholder="your@email.com"
+          name="email"
           message={emailMessage}
         />
         <Password.TextInput
           value={password}
           onChangeText={onChangeS}
           label="비밀번호"
-          placeholder="6~18자리"
           type="password"
+          placeholder="6~18자리"
+          name="password"
           message={passwordMessage}
         />
         <ConfirmPassword.TextInput
-          onChangeText={setContirmPassword}
-          label="비밀번호 확인"
-          placeholder="*****"
-          type="password"
-          value={contirmPassword}
           message={confirmPasswordMessage}
+          onChangeText={setConfirmPassword}
+          label="비밀번호 확인"
+          type="password"
+          placeholder="* * * * * * * *"
+          value={confirmPassword}
         />
-        {/* 주소컴포넌트 자리 */}
+
+        {/* 주소 컴포넌트 */}
         <JusoComponent
           ref={jusoRef}
           jusoes={jusoes}

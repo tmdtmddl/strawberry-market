@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 interface Props {
   container?: string;
-  warp?: string;
+  wrap?: string;
   icon?: string;
   message?: string;
   messageClassName?: string;
@@ -15,7 +15,7 @@ const Loading = ({
   icon,
   message,
   messageClassName,
-  warp,
+  wrap,
 }: Props) => {
   return (
     <div
@@ -26,13 +26,13 @@ const Loading = ({
     >
       <div
         className={twMerge(
-          "  items-center",
+          "items-center",
           "bg-white p-10 border border-gray-200 shadow-xl rounded-2xl",
-          warp
+          wrap
         )}
       >
         <ImSpinner5
-          className={twMerge("text-4xl animate-spin text-theme ", icon)}
+          className={twMerge("text-4xl animate-spin text-theme", icon)}
         />
         <p
           className={twMerge(
@@ -40,7 +40,7 @@ const Loading = ({
             messageClassName
           )}
         >
-          {message ?? "Loading ..."}
+          {message ?? "Loading..."}
         </p>
       </div>
     </div>
