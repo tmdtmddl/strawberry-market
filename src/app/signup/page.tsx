@@ -100,8 +100,8 @@ const Signup = () => {
     }
     if (jusoes.length === 0) {
       alert("기본 배송지를 입력해주세요.");
-      jusoRef.current?.openModal();
-      jusoRef.current?.focusKeyword();
+      jusoRef.current?.openModal(); //자식한테 "모달 열어!" 명령
+      jusoRef.current?.focusKeyword(); // 자식한테"닉네임 인풋에 커서 줘!"
       return;
     }
 

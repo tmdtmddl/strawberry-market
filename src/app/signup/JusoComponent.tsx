@@ -222,8 +222,12 @@ const JusoComponent = ({ jusoes, onChangeJ, ref }: Props) => {
     [jusoes, onChangeJ, Keyword]
   );
 
+  //부모 → 자식으로 명령을 내릴 수 있게 해주는 리모컨 시스템
+  //부모가 자식한테 "기능"을 실행해달라고 하고 싶을 수 있어.
+  //이런 걸 하려면, 자식이 부모한테 리모컨 버튼을 넘겨줘야 해.그걸 가능하게 해주는 게 useImperativeHandle.
   useImperativeHandle(
     ref,
+    // 두 번째 파라미터: () => ({ ... })이 안에서 리모컨 기능들을 만들어서 부모에게 넘겨줘
     () => ({
       focusDetail: () => Detail.focus(),
       focusKeyword: () => Keyword.focus(),
@@ -231,6 +235,7 @@ const JusoComponent = ({ jusoes, onChangeJ, ref }: Props) => {
       openModal: () => setIsModalShowing(true),
       closeModal: () => setIsModalShowing(false),
     }),
+    // 세 번째 파라미터: [Keyword, Nickname, Detail] 혹시 이 값들이 바뀌면, 리모컨 기능도 다시 만들어주도록 지정해주는 거야
     [Keyword, Nickname, Detail]
   );
 
