@@ -189,9 +189,9 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       }}
     >
       {!initialized ? (
-        <div className="modal con justify-center items-center">
+        <div className="modal con justify-center items-center text-theme bg-white">
           <GiStrawberry className="text-6xl" />
-          <h1>딸기마켓</h1>
+          <h1 className="text-2xl font-black">딸기마켓</h1>
         </div>
       ) : (
         children
