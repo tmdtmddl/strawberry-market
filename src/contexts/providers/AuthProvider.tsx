@@ -161,28 +161,34 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     console.log({ user });
   }, [user]);
   //useEffect: 초기 로그인 상태 확인/앱이 켜졌을 때 Firebase에 이미 로그인된 유저가 있는지 확인.
-
+  //왜 useEffect 가 필요한 걸까?
+  //로그인/로그아웃 상태는 앱이 처음 시작할 때, 또는 사용자가 로그인/로그아웃할 때 바뀜.
+  //이 상태를 실시간으로 자동 감지하고, 앱에 반영하려면 이 리스너가 필요함.
+  //useEffect 를 써서 이 리스너를 한 번만 등록하고, 컴포넌트가 사라질 때 정리해주는 거야
   useEffect(() => {
     const subscribeUser = authService.onAuthStateChanged(async (fbUser) => {
       if (!fbUser) {
-        console.log(" not user");
+        console.log("not logged in");
       } else {
         const { uid } = fbUser;
-        console.log(uid);
         const snap = await ref.doc(uid).get();
+        console.log(snap);
         const data = snap.data() as User;
         if (!data) {
-          console.log(" no user");
+          console.log("no user data");
         } else {
           setUser(data ?? null);
         }
       }
-      setInitialized(true);
+
+      setTimeout(() => {
+        setInitialized(true);
+      }, 1000);
     });
+
     subscribeUser;
     return subscribeUser;
   }, []);
-
   return (
     <AUTH.Context.Provider
       value={{
