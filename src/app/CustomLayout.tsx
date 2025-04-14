@@ -169,7 +169,7 @@ const CustomLayout = ({ children }: PropsWithChildren) => {
                   //! 타겟이 있음 다른 메뉴를 구경중인 상태
                   const spilt = menu.href.split("=");
                   const menuTarget = spilt.length > 1 ? spilt[1] : "";
-                  console.log(spilt, menuTarget);
+                  // console.log(spilt, menuTarget);
                   return target === menuTarget;
                 }
                 //! 유저의  아이디 / 경로 장바구니, 주문내역 등 수현시 필요한 로직
