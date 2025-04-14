@@ -96,14 +96,13 @@ const JusoComponent = ({ jusoes, onChangeJ, ref }: Props) => {
       const data = await response.json();
 
       console.log(data.results);
-      // API 만든곳에서 정둔 에러코드임
+      // API 만든곳에서 정해둔 에러코드임
       if (data.results.common.errorCode !== "0") {
         return alert(data.results.common.errorMessage);
       }
       //API로부터 받은 주소 리스트를 Juso 형태로 가공
       const newItems = data.results.juso.map((item: any) => {
         // console.log(item);
-
         return {
           detail: "",
           id: item.bdMgtSn, //여기가 문제였음 item의 아이디로 쓸것 잘살펴보기

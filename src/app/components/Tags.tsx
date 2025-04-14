@@ -18,7 +18,7 @@ export const Form = ({
         }
       }}
       className={twMerge(
-        "max-w-100 mx-auto flex flex-col gap-y-2.5",
+        "max-w-100 mx-auto flex flex-col gap-y-2.5 w-full",
         props?.className
       )}
     >

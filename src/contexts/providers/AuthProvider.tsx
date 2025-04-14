@@ -11,6 +11,7 @@ import {
 import { AUTH } from "../react.context";
 import { authService, dbService, FBCollection } from "@/app/lib";
 import { GiStrawberry } from "react-icons/gi";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [initialized, setInitialized] = useState(false); //Firebase 초기화가 완료되었는지 여부 (true면 렌더 시작).
@@ -20,6 +21,38 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   //Firestore의 users 컬렉션을 참조하는 객체./useMemo로 한 번만 만들고 재사용.
   const ref = useMemo(() => dbService.collection(FBCollection.USERS), []);
   //Firebase 인증 → 로그인 성공 → Firestore에서 추가 정보 가져옴.가져온 정보를 setUser로 상태에 저장.
+
+  const { data, error } = useQuery({
+    queryKey: ["user", user?.uid],
+    queryFn: async (): Promise<null | User> => {
+      if (!user) {
+        return null;
+      }
+      const snap = await ref.doc(user.uid).get();
+      const data = snap.data() as User | null;
+      return data;
+    },
+  });
+
+  //! re-validate -> invalidation
+  const queryClient = useQueryClient();
+  const caching = useCallback(() => {
+    //! user 다시받아오기
+    const queryKey = ["user", user?.uid];
+    queryClient.invalidateQueries({ queryKey });
+  }, [queryClient, user]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+    } else {
+      if (data) {
+        //console.log(data)
+        setUser(data);
+      }
+    }
+  }, [data, error]);
+
   const signin = useCallback(
     (email: string, password: string) =>
       new Promise<Result>((resolve) =>
@@ -146,20 +179,40 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
                   "로그인 한 유저만 사용할 수 잇는 기능입니다. 로그인 하시겠습니까?",
               });
             }
-
+            //! firebase에 데이터 저장하는 로직
             await ref.doc(user.uid).update({ [target]: value });
+            //? client의 user업데이트 // => firebase 실시간 리스너 or react-query or setUSer로 업데이트
+            // setUser({ ...user, [target]: value }); //! 제일 간단한방법 그러나 실시간으로 X
+            caching();
+
             return resolve({ success: true });
           } catch (error: any) {
             return resolve({ message: error.message });
           }
         })
       ),
-    [ref]
+    [ref, user, caching]
   );
 
-  useEffect(() => {
-    console.log({ user });
-  }, [user]);
+  //! 실시간 리스너 안좋은점 실시간으로 계속 요청을 날림
+  // useEffect(() => {
+  //   if (user) {
+  //     // console.log({ user });
+  //     const subscribeUser = dbService
+  //       .collection(FBCollection.USERS)
+  //       .doc(user.uid)
+  //       .onSnapshot((snap) => {
+  //         const data = snap.data() as User | null;
+  //         if (!data) {
+  //           return;
+  //         }
+  //         setUser(data);
+  //       });
+  //     // subscribeUser;
+  //     return subscribeUser;
+  //   }
+  // }, [user]);
+
   //useEffect: 초기 로그인 상태 확인/앱이 켜졌을 때 Firebase에 이미 로그인된 유저가 있는지 확인.
   //왜 useEffect 가 필요한 걸까?
   //로그인/로그아웃 상태는 앱이 처음 시작할 때, 또는 사용자가 로그인/로그아웃할 때 바뀜.
@@ -177,6 +230,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
         if (!data) {
           console.log("no user data");
         } else {
+          console.log(data);
           setUser(data ?? null);
         }
       }
