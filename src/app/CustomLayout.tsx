@@ -160,7 +160,7 @@ const CustomLayout = ({ children }: PropsWithChildren) => {
               }
               if (user) {
                 //! 유저가 상품을 판매하기 위한 곳에 왔을 때
-                if (`${user.uid}` === pathname) {
+                if (`/${user.uid}` === pathname) {
                   // console.log(params)
                   if (!target) {
                     //! uid === 경로랑 같고 ,타겟이 없으면 전체상품페이지여서 바로 참
