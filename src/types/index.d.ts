@@ -21,3 +21,27 @@ interface Result {
   message?: string;
 }
 type PromiseResult = Promise<Result>;
+
+interface Product {
+  sellerId: string;
+  name: string;
+  price: number;
+  created_at: string;
+  imgUrls: string[];
+  description: string[];
+  id: string;
+}
+
+interface CartItem extends Product {
+  quantity: number;
+}
+
+interface PaymentHistory {
+  items: CartItem[];
+
+  paymentId: string;
+  paymentMethod: "신용카드" | "계좌이체";
+  paid_at: string;
+
+  title: string;
+}

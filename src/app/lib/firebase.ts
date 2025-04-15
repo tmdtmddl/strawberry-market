@@ -37,4 +37,5 @@ export {
 
 export enum FBCollection {
   USERS = "users",
+  PRODUCTS = "products",
 }
