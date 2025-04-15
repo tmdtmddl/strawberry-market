@@ -63,7 +63,7 @@ const MyProductForm = ({ onSubmit, payload }: Props) => {
   }, [product.description]);
   const priceMessage = useMemo(() => {
     console.log(typeof product.price, product.price);
-    if (isNum(product.price)) {
+    if (!isNum(product.price)) {
       return "숫자만 입력해주세요. ";
     }
     if (product.price === 0) {
