@@ -29,15 +29,10 @@ createdAt: Date; // 알림 생성 시각
 isRead: boolean; // 읽음 여부
 }
 
-interface FollowNoticeState {
-notice:FollowNotice[] //알림목록
-hasMore: boolean; // 더 불러올 것 인가의 여부
-}
-
 //고객센터
-interface CustomerService {
+interface QNA {
 question:string
-Answer:string
+Answers:string[]
 }
 
 # firebase collection strategy
