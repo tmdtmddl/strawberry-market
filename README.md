@@ -18,14 +18,14 @@ imgs:string[]
 id:string
 content:string
 uid?:string
-createdAt: Date; // 게시 시간
+createdAt: ; // 게시 시간
 }
 //알림
 interface FollowNotice {
 uid?:string //팔로우 당한 사람의 ID (나의 아이디)
 id: string; // Firebase 문서 ID
 senderId: string; // 팔로우한 사람의 ID
-createdAt: Date; // 알림 생성 시각
+createdAt: ; // 알림 생성 시각
 isRead: boolean; // 읽음 여부
 }
 
