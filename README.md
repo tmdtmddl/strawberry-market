@@ -35,6 +35,21 @@ question:string
 Answers:string[]
 }
 
+enum FBCollection {
+POSTS = 'posts'
+}
+
+enum FBCollection_POST {
+LIKES = 'likes'
+shared = 'shared'
+'bookmarked'
+}
+
+const db ={}
+
+db.collection(FBCollection.POSTS).doc(postd).collection(FBCollection_POSTS.LIKES).doc(userId).delete()
+db.collection(FBCollection.POSTS).doc(postd).collection(FBCollection_POSTS.LIKES).doc(userId).update
+
 # firebase collection strategy
 
 # ui 다듬기
