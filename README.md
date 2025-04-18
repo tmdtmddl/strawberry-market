@@ -53,3 +53,31 @@ db.collection(FBCollection.POSTS).doc(postd).collection(FBCollection_POSTS.LIKES
 # firebase collection strategy
 
 # ui 다듬기
+
+interface Notification {
+id :string // 해당 노티피케이션 아이디
+followigId : string | null //내가 팔로우 한 사람의 아이디 //! 내가 팔로우 한 사람의 아이디 //! 내가 팔로우할 때
+followerId : string // 팔로우 당할때는 ?
+created_at: Date
+isRead : boolean //읽음 여부 판단
+}
+
+//! 내가팔로우 할때
+
+const followingNotigication1 :Notification1 ={
+id:"ddd",
+following:"follow 할 사람의 id",
+follweId:null
+creared_at:new Date()
+isRead :false
+}
+const ref1 =dbService.collection(fbcollection.user).doc(uid).collection(fbc...natifi...)
+
+//!다른사람한테 갈때
+const followingNotigication2 :Notification1 ={
+id:"ddddddd",
+following:null,
+follwerId:"dfdfdf"
+creared_at:new Date()
+isRead :false
+}
